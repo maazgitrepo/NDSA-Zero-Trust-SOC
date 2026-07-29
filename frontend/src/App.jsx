@@ -28,8 +28,10 @@ function App() {
   };
 
   useEffect(() => {
-    loadAlerts();
-  }, []);
+  fetch("http://127.0.0.1:8001/alerts")
+    .then((response) => response.json())
+    .then((data) => setAlerts(data));
+}, []);
 
   const filteredAlerts =
     filter === "all"
