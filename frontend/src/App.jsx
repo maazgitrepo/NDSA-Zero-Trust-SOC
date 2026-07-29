@@ -4,6 +4,7 @@ function App() {
   const [alerts, setAlerts] = useState([]);
   const [title, setTitle] = useState("");
   const [severity, setSeverity] = useState("low");
+  const [filter, setFilter] = useState("all");
 
   const loadAlerts = async () => {
     const response = await fetch("http://127.0.0.1:8001/alerts");
@@ -29,6 +30,11 @@ function App() {
   useEffect(() => {
     loadAlerts();
   }, []);
+
+  const filteredAlerts =
+    filter === "all"
+      ? alerts
+      : alerts.filter((alert) => alert.severity === filter);
 
   return (
     <div>
@@ -59,7 +65,15 @@ function App() {
 
       <h2>Security Alerts</h2>
 
-      {alerts.map((alert) => (
+      <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <option value="all">All Alerts</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+        <option value="critical">Critical</option>
+      </select>
+
+      {filteredAlerts.map((alert) => (
         <div key={alert.id}>
           <strong>{alert.title}</strong> — {alert.severity}
         </div>
