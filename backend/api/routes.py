@@ -1,12 +1,13 @@
 from fastapi import APIRouter
+from database.connection import get_connection
 
 router = APIRouter()
+
 
 @router.get("/health")
 def health():
     return {"status": "healthy"}
 
-from database.connection import get_connection
 
 @router.post("/alerts")
 def create_alert(title: str, severity: str):
@@ -29,3 +30,30 @@ def create_alert(title: str, severity: str):
         "severity": severity,
         "status": "open"
     }
+
+
+@router.get("/alerts")
+def get_alerts():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT id, title, severity, status, created_at "
+        "FROM alerts ORDER BY id DESC"
+    )
+
+    rows = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return [
+        {
+            "id": row[0],
+            "title": row[1],
+            "severity": row[2],
+            "status": row[3],
+            "created_at": row[4]
+        }
+        for row in rows
+    ]
