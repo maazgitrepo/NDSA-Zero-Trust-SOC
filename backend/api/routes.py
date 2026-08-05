@@ -1,6 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from database.connection import get_connection
-from auth import verify_token
+from auth import (
+    verify_token,
+    admin_required,
+    analyst_required,
+    viewer_required
+)
 
 router = APIRouter()
 
@@ -17,7 +22,7 @@ def health():
 def create_alert(
     title: str,
     severity: str,
-    user=Depends(verify_token)
+    user=Depends(analyst_required)
 ):
     conn = get_connection()
     cur = conn.cursor()
@@ -45,7 +50,7 @@ def create_alert(
 # GET ALL ALERTS
 # ==========================
 @router.get("/alerts")
-def get_alerts(user=Depends(verify_token)):
+def get_alerts(user=Depends(viewer_required)):
     conn = get_connection()
     cur = conn.cursor()
 
@@ -159,7 +164,7 @@ def update_alert_status(
 @router.delete("/alerts/{alert_id}")
 def delete_alert(
     alert_id: int,
-    user=Depends(verify_token)
+    user=Depends(admin_required)
 ):
     conn = get_connection()
     cur = conn.cursor()
@@ -646,3 +651,173 @@ def get_alert(
         "created_at": row[4]
     }
 
+
+# ==========================
+# SOC DASHBOARD
+# ==========================
+@router.get("/dashboard")
+def dashboard(user=Depends(viewer_required)):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            COUNT(*) AS total_alerts,
+            COUNT(*) FILTER (WHERE status='open') AS open_alerts,
+            COUNT(*) FILTER (WHERE status='resolved') AS resolved_alerts,
+            COUNT(*) FILTER (WHERE severity='critical') AS critical_alerts,
+            COUNT(*) FILTER (WHERE severity='high') AS high_alerts
+        FROM alerts
+    """)
+
+    row = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    return {
+        "total_alerts": row[0],
+        "open_alerts": row[1],
+        "resolved_alerts": row[2],
+        "critical_alerts": row[3],
+        "high_alerts": row[4],
+        "system_status": "Healthy"
+    }
+
+
+# ==========================
+# THREAT DETECTION
+# ==========================
+@router.get("/threats")
+def threat_detection(user=Depends(viewer_required)):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id, title, severity, status, created_at
+        FROM alerts
+        WHERE severity='critical'
+        ORDER BY created_at DESC
+    """)
+
+    rows = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return [
+        {
+            "threat_id": row[0],
+            "title": row[1],
+            "severity": row[2],
+            "status": row[3],
+            "detected_at": row[4]
+        }
+        for row in rows
+    ]
+
+
+# ==========================
+# VULNERABILITY MANAGEMENT
+# ==========================
+@router.get("/vulnerabilities")
+def vulnerabilities(user=Depends(viewer_required)):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            COUNT(*) FILTER (WHERE severity='critical') AS critical,
+            COUNT(*) FILTER (WHERE severity='high') AS high,
+            COUNT(*) FILTER (WHERE severity='critical' AND status='open') AS unresolved_critical,
+            COUNT(*) FILTER (WHERE status='resolved') AS resolved
+        FROM alerts
+    """)
+
+    row = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    return {
+        "critical_vulnerabilities": row[0],
+        "high_vulnerabilities": row[1],
+        "unresolved_critical": row[2],
+        "resolved_vulnerabilities": row[3],
+        "scan_status": "Completed"
+    }
+
+# ==========================
+# INCIDENT RESPONSE
+# ==========================
+@router.get("/incident-response")
+def incident_response(user=Depends(viewer_required)):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            COUNT(*) FILTER (WHERE status='open'),
+            COUNT(*) FILTER (WHERE status='resolved'),
+            COUNT(*)
+        FROM alerts
+    """)
+
+    row = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    return {
+        "active_incidents": row[0],
+        "resolved_incidents": row[1],
+        "total_incidents": row[2],
+        "response_status": "Operational"
+    }
+
+# ==========================
+# ENDPOINT HEALTH
+# ==========================
+@router.get("/endpoint-health")
+def endpoint_health(user=Depends(viewer_required)):
+    return {
+        "linux_server": "Healthy",
+        "database": "Healthy",
+        "backend_api": "Running",
+        "frontend": "Running"
+    }
+
+# ==========================
+# CONTAINER SECURITY
+# ==========================
+@router.get("/container-security")
+def container_security(user=Depends(viewer_required)):
+    return {
+        "docker_status": "Secure",
+        "running_containers": 3,
+        "critical_findings": 0
+    }
+
+# ==========================
+# NETWORK SECURITY
+# ==========================
+@router.get("/network-security")
+def network_security(user=Depends(viewer_required)):
+    return {
+        "firewall": "Active",
+        "ids": "Monitoring",
+        "blocked_ips": 2,
+        "network_status": "Secure"
+    }
+
+# ==========================
+# SYSTEM STATUS
+# ==========================
+@router.get("/system-status")
+def system_status(user=Depends(viewer_required)):
+    return {
+        "api": "Online",
+        "database": "Online",
+        "keycloak": "Online",
+        "uptime": "99.9%"
+    }

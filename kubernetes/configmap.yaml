@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  APP_NAME: NDSA-SOC
+  ENV: Production
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2026-08-05T08:20:25Z"
+  name: ndsa-config
+  namespace: ndsa
+  resourceVersion: "74211"
+  uid: 5222f92d-7800-404c-a5e8-1bdcbd34fc3a

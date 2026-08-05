@@ -40,3 +40,22 @@ def verify_token(
             status_code=401,
             detail="Invalid or expired token"
         )
+
+def require_role(role: str):
+    def role_checker(user=Depends(verify_token)):
+        roles = user.get("realm_access", {}).get("roles", [])
+
+        if role not in roles:
+            raise HTTPException(
+                status_code=403,
+                detail=f"{role} role required"
+            )
+
+        return user
+
+    return role_checker
+
+
+admin_required = require_role("admin")
+analyst_required = require_role("analyst")
+viewer_required = require_role("viewer")

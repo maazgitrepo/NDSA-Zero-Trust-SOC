@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2026-08-05T08:14:11Z"
+  labels:
+    app: ndsa-web
+  name: ndsa-web
+  namespace: ndsa
+  resourceVersion: "73944"
+  uid: bccaa0df-36c1-4d75-8979-bc7c69cb5164
+spec:
+  clusterIP: 10.105.180.243
+  clusterIPs:
+  - 10.105.180.243
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 32111
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: ndsa-web
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
