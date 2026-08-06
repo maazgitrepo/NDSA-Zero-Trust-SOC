@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-The NDSA Zero Trust SOC project is a cybersecurity platform developed to demonstrate Zero Trust Architecture using FastAPI, PostgreSQL, and Keycloak. The project provides secure REST APIs for alert management with authentication and authorization.
+The NDSA Zero Trust SOC project is a cybersecurity platform designed to demonstrate Zero Trust Architecture using FastAPI, React, PostgreSQL, Keycloak, Docker, Terraform, and Kubernetes. The project provides secure REST APIs for alert management with authentication, role-based authorization, infrastructure automation, containerization, and deployment orchestration.
 
 ---
 
@@ -10,6 +10,7 @@ The NDSA Zero Trust SOC project is a cybersecurity platform developed to demonst
 
 - Keycloak Authentication
 - JWT Bearer Token Authorization
+- Role-Based Access Control (RBAC)
 - Alert Management APIs
 - Alert Statistics
 - Open Alert Count
@@ -17,6 +18,10 @@ The NDSA Zero Trust SOC project is a cybersecurity platform developed to demonst
 - Search Alerts
 - Filter Alerts
 - Resolve All Alerts
+- Docker Containerization
+- Kubernetes Deployment
+- Infrastructure as Code (Terraform)
+- CI/CD Pipeline (GitHub Actions)
 - Swagger API Documentation
 
 ---
@@ -24,12 +29,16 @@ The NDSA Zero Trust SOC project is a cybersecurity platform developed to demonst
 ## Technology Stack
 
 - FastAPI
+- React
 - PostgreSQL
 - Keycloak
-- Python
-- Docker
+- Docker & Docker Compose
+- Terraform
+- Kubernetes (Minikube)
 - Git
 - GitHub
+- GitHub Actions (CI/CD)
+- Python
 
 ---
 
@@ -37,11 +46,12 @@ The NDSA Zero Trust SOC project is a cybersecurity platform developed to demonst
 
 ```
 backend/
-database/
-api/
-auth/
-docs/
 frontend/
+docs/
+kubernetes/
+terraform-lab/
+docker-compose.yml
+README.md
 ```
 
 ---
@@ -79,20 +89,25 @@ Authorization: Bearer <JWT_TOKEN>
 
 ## Running the Project
 
-1. Start PostgreSQL
-2. Start Keycloak
-3. Activate Python virtual environment
-4. Run FastAPI
+### 1. Start Docker Services
+
+```
+docker compose up -d
+```
+
+### 2. Activate Python Virtual Environment
+
+```
+source .venv/bin/activate
+```
+
+### 3. Start FastAPI
 
 ```
 uvicorn main:app --host 0.0.0.0 --port 8001 --reload
 ```
 
----
-
-## API Documentation
-
-Swagger UI
+### 4. Access Swagger UI
 
 ```
 http://localhost:8001/docs
@@ -100,13 +115,17 @@ http://localhost:8001/docs
 
 ---
 
-## Future Improvements
+## Documentation
 
-- React Dashboard
-- Threat Detection Engine
-- Vulnerability Management
-- Incident Response Dashboard
-- SIEM Integration
+Project documentation is available in the `docs/` directory.
+
+- Installation Guide
+- Deployment Guide
+- API Documentation
+- User Guide
+- Administration Guide
+- Incident Response Guide
+
 
 ---
 
@@ -114,4 +133,4 @@ http://localhost:8001/docs
 
 **Maaz Farrukh**
 
-NDSA Zero Trust Security Operations Center Project
+NDSA Zero Trust Security Operations Center (SOC)
