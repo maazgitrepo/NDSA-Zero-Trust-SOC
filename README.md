@@ -129,6 +129,22 @@ Project documentation is available in the `docs/` directory.
 
 ---
 
+## Screenshots
+
+### Swagger API Documentation
+![Swagger API Documentation](docs/screenshots/swagger.png)
+
+### Keycloak
+![Keycloak](docs/screenshots/keycloak.png)
+
+### Docker Services
+![Docker Services](docs/screenshots/docker.png)
+
+### GitHub Actions CI
+![GitHub Actions CI](docs/screenshots/ci.png)
+
+---
+
 ## Author
 
 **Maaz Farrukh**
