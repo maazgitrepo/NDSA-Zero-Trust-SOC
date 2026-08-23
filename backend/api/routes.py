@@ -821,3 +821,73 @@ def system_status(user=Depends(viewer_required)):
         "keycloak": "Online",
         "uptime": "99.9%"
     }
+
+# ==========================
+# INCIDENT MANAGEMENT
+# ==========================
+
+@router.post("/incidents")
+def create_incident(
+    title: str,
+    severity: str,
+    owner: str = "",
+    user=Depends(viewer_required)
+):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO incidents (title, severity, owner)
+        VALUES (%s, %s, %s)
+        RETURNING id, title, severity, status, owner, created_at
+    """, (title, severity, owner))
+
+    incident = cur.fetchone()
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    return {
+        "id": incident[0],
+        "title": incident[1],
+        "severity": incident[2],
+        "status": incident[3],
+        "owner": incident[4],
+        "created_at": incident[5]
+    }
+
+
+@router.get("/incidents")
+def get_incidents(user=Depends(viewer_required)):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id, title, severity, status, owner,
+               investigation, evidence, remediation,
+               created_at, closed_at
+        FROM incidents
+        ORDER BY created_at DESC
+    """)
+
+    rows = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return [
+        {
+            "id": r[0],
+            "title": r[1],
+            "severity": r[2],
+            "status": r[3],
+            "owner": r[4],
+            "investigation": r[5],
+            "evidence": r[6],
+            "remediation": r[7],
+            "created_at": r[8],
+            "closed_at": r[9]
+        }
+        for r in rows
+    ]

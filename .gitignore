@@ -8,3 +8,15 @@ dist/
 # Terraform
 .terraform/
 *.tfstate.backup
+
+# Python
+__pycache__/
+*.pyc
+
+# Wazuh installation files
+*.rpm
+wazuh-install-files.tar
+wazuh-install.sh
+
+# Certificates
+frontend/certs/
