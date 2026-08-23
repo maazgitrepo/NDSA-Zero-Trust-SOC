@@ -123,17 +123,23 @@ uvicorn main:app --host 0.0.0.0 --port 8001 --reload
 ```
 http://192.168.2.211:8001/docs
 ```
-### 5. Start React Frontend
+### 5. Access Keycloak
+
+```
+http://192.168.2.211:8081
+```
+
+### 6. Start React Frontend
 
 cd frontend
 npm install
 npm run dev
 
-### 6. Access NDSA SOC Dashboard
+### 7. Access NDSA SOC Dashboard
 
 https://192.168.2.211:5173
 
-### 7. Access Wazuh Dashboard
+### 8. Access Wazuh Dashboard
 
 https://192.168.2.211:443
 
