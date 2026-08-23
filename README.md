@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-The NDSA Zero Trust SOC project is a cybersecurity platform designed to demonstrate Zero Trust Architecture using FastAPI, React, PostgreSQL, Keycloak, Docker, Terraform, and Kubernetes. The project provides secure REST APIs for alert management with authentication, role-based authorization, infrastructure automation, containerization, and deployment orchestration.
+The project provides secure REST APIs for alert management and incident management with authentication, role-based authorization, infrastructure automation, containerization, deployment orchestration, and security monitoring using Wazuh.
 
 ---
 
@@ -16,6 +16,13 @@ The NDSA Zero Trust SOC project is a cybersecurity platform designed to demonstr
 - Open Alert Count
 - Severity Summary
 - Search Alerts
+- Incident Management
+- Incident Creation
+- Incident Severity and Ownership
+- Wazuh Security Monitoring
+- Wazuh Threat Detection
+- Wazuh Vulnerability Detection
+- Wazuh File Integrity Monitoring
 - Filter Alerts
 - Resolve All Alerts
 - Docker Containerization
@@ -33,12 +40,14 @@ The NDSA Zero Trust SOC project is a cybersecurity platform designed to demonstr
 - PostgreSQL
 - Keycloak
 - Docker & Docker Compose
+- Python
+- Trivy
+- Wazuh
 - Terraform
 - Kubernetes (Minikube)
 - Git
 - GitHub
 - GitHub Actions (CI/CD)
-- Python
 
 ---
 
@@ -72,6 +81,8 @@ README.md
 | GET | /alerts/severity/{severity} | Search by Severity |
 | GET | /alerts/search/title | Search by Title |
 | DELETE | /alerts/{alert_id} | Delete Alert |
+| GET | /incidents | Get All Incidents |
+| POST | /incidents | Create Incident |
 
 ---
 
@@ -125,6 +136,7 @@ Project documentation is available in the `docs/` directory.
 - User Guide
 - Administration Guide
 - Incident Response Guide
+- Trivy Security Scan
 
 
 ---
@@ -142,6 +154,12 @@ Project documentation is available in the `docs/` directory.
 
 ### GitHub Actions CI
 ![GitHub Actions CI](docs/screenshots/ci.png)
+
+### NDSA Zero Trust SOC Dashboard
+![NDSA Zero Trust SOC Dashboard](docs/screenshots/soc-dashboard.png)
+
+### Wazuh Security Dashboard
+![Wazuh Security Dashboard](docs/screenshots/wazuh-dashboard.png)
 
 ---
 
